@@ -25,6 +25,10 @@ var productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    subCategory: {
+      type: String,
+      required: true,
+    },
     brand: {
       type: String,
       required: true,
@@ -35,7 +39,7 @@ var productSchema = new mongoose.Schema(
     sold: {
       type: Number,
       default: 0,
-      select: false, // hide source from user
+      // select: false, // hide source from user
     },
     images: {
       type: Array,

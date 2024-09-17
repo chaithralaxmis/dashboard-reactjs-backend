@@ -15,7 +15,7 @@ const createProduct = asyncHandler(async (req, res) => {
     }
     const newProduct = await Product.create(req.body);
     return res.json({
-      staus: "ok",
+      status: "ok",
       message: "Product created",
       product: newProduct,
     });

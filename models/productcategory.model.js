@@ -8,6 +8,11 @@ const categorySchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
+    parentCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "productCategory",
+      default: null,
+    },
   },
   {
     timestamps: true,
