@@ -242,12 +242,15 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  const cookie = req.cookies;
-  if (!cookie?.refreshToken) {
-    return json.res({ status: "error", error: "No refresh token in cookies" });
-  }
-  const refreshToken = cookie.refreshToken;
-  const user = await User.findOne({ refreshToken: refreshToken });
+  // const cookie = req.cookies;
+  // if (!cookie?.refreshToken) {
+  //   return res.json({ status: "error", error: "No refresh token in cookies" });
+  // }
+  // const refreshToken = cookie.refreshToken;
+  // const user = await User.findOne({ refreshToken: refreshToken });
+  const { email } = req.params;
+  const user = await User.findOne({ email: email });
+
   if (!user) {
     res.clearCookie("refreshToken", {
       httpOnly: true,
@@ -256,7 +259,7 @@ const logout = asyncHandler(async (req, res) => {
     return res.sendStatus(204);
   }
   await User.findOneAndUpdate(
-    { refreshToken, refreshToken },
+    { email: email },
     {
       refreshToken: "",
     }

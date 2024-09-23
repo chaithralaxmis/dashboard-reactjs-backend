@@ -27,9 +27,12 @@ const createProduct = asyncHandler(async (req, res) => {
 const getAProduct = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
-    const findProduct = await Product.findById(id);
+    const findProduct = await Product.findById(id)
+      .populate("brand")
+      .populate("color")
+      .populate("category");
     return res.json({
-      staus: "ok",
+      status: "ok",
       data: findProduct,
     });
   } catch (error) {
@@ -54,8 +57,10 @@ const getAllProduct = asyncHandler(async (req, res) => {
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-    let query = Product.find(JSON.parse(queryStr));
-
+    let query = Product.find(JSON.parse(queryStr))
+      .populate("brand")
+      .populate("color")
+      .populate("category");
     // Sorting
     if (req.query.sort) {
       const sortBy = req.query.sort.split(",").join(" ");

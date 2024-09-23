@@ -22,15 +22,18 @@ var productSchema = new mongoose.Schema(
       required: true,
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "productCategory",
       required: true,
     },
     subCategory: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "productCategory",
       required: true,
     },
     brand: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "brand",
       required: true,
     },
     quantity: {
@@ -44,7 +47,12 @@ var productSchema = new mongoose.Schema(
     images: {
       type: Array,
     },
-    color: [],
+    color: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "color", // Array of references to Color documents
+      },
+    ],
     tags: [],
     ratings: [
       {

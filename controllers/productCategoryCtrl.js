@@ -65,28 +65,34 @@ const getAllCategory = asyncHandler(async (req, res) => {
   }
 });
 
-const getSubCategory = asyncHandler(async (req, res) => {
+const getAllSubCategory = asyncHandler(async (req, res) => {
   try {
-    const { parentCategoryId } = req.params;
+    const { id } = req.params;
 
     // Fetch categories with the given parentCategory ID
-    var categories = await Category.find({
-      parentCategory: parentCategoryId,
+    const categories = await Category.find({
+      parentCategory: id,
     });
+    console.log(categories);
 
-    for (const cat of categories) {
-      let subcategories = await Category.find({
+    // Use Promise.all to fetch subcategories concurrently
+    const categoryPromises = categories.map(async (cat) => {
+      const subcategories = await Category.find({
         parentCategory: cat._id,
       });
-      console.log(subcategories);
-      cat.parentCategory = subcategories;
-      console.log(categories);
-    }
+      return {
+        ...cat.toObject(), // Convert Mongoose document to plain object
+        subCategory: subcategories,
+      };
+    });
+
+    // Wait for all category promises to resolve
+    const categoriesWithSubcategories = await Promise.all(categoryPromises);
 
     // Return the categories with their subcategories
-    return res.json({ status: "ok", data: categories });
+    return res.json({ status: "ok", data: categoriesWithSubcategories });
   } catch (error) {
-    throw new Error(error);
+    return res.status(500).json({ status: "error", message: error.message });
   }
 });
 
@@ -109,5 +115,5 @@ module.exports = {
   getACategory,
   deleteCategory,
   getAllCategory,
-  getSubCategory,
+  getAllSubCategory,
 };
